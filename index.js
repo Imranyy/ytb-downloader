@@ -30,7 +30,7 @@ const downloadFile = async (fileUrl, downloadFolder) => {
 }; 
 
 // Testing
-const IMAGE_URL ='https://www.kindacode.com/wp-content/uploads/2021/01/test.jpg';
+const IMAGE_URL ='https://firebasestorage.googleapis.com/v0/b/tiny-pesa-app.appspot.com/o/French-Fries-1025x1536.jpg?alt=media&token=2bf615da-dc03-4583-b57f-ae76e7d005d0';
 downloadFile(IMAGE_URL, 'downloads');
 
 const VIDEO_URL ='https://www.kindacode.com/wp-content/uploads/2021/01/example.mp4';

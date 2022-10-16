@@ -10,7 +10,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/download", async (req, res) => {
-	const v_id = req.query.url.split('v=')[1];
+	try{
+    const v_id = req.query.url.split('v=')[1];
     const info = await ytdl.getInfo(req.query.url);
 	return res.render("download", {
 		url: "https://www.youtube.com/embed/" + v_id,
@@ -18,6 +19,9 @@ app.get("/download", async (req, res) => {
             return a.mimeType < b.mimeType;
         }),
 	});
+  }catch(err){
+    return res.render("index");
+  }
 });
 
 //running server

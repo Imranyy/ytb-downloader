@@ -1,40 +1,24 @@
-const express=require('express')
-const fs = require('fs')
-const path = require('path')
-const axios = require('axios').default;
+const express=require('express');
+const ytdl = require("ytdl-core");
+
 
 const app=express();
+app.set("view engine", "ejs");
+//routes
+app.get("/", (req, res) => {
+	return res.render("index");
+});
 
-// fileUrl: the absolute url of the image or video you want to download
-// downloadFolder: the path of the downloaded file on your machine
-const downloadFile = async (fileUrl, downloadFolder) => {
-  // Get the file name
-  const fileName = path.basename(fileUrl);
-
-  // The path of the downloaded file on our machine
-  const localFilePath = path.resolve(__dirname, downloadFolder, fileName);
-  try {
-    const response = await axios({
-      method: 'GET',
-      url: fileUrl,
-      responseType: 'stream',
-    });
-
-    const w = response.data.pipe(fs.createWriteStream(localFilePath));
-    w.on('finish', () => {
-      console.log('Successfully downloaded file!');
-    });
-  } catch (err) { 
-    throw new Error(err);
-  }
-}; 
-
-// Testing
-const IMAGE_URL ='https://firebasestorage.googleapis.com/v0/b/tiny-pesa-app.appspot.com/o/French-Fries-1025x1536.jpg?alt=media&token=2bf615da-dc03-4583-b57f-ae76e7d005d0';
-downloadFile(IMAGE_URL, 'downloads');
-
-const VIDEO_URL ='https://www.kindacode.com/wp-content/uploads/2021/01/example.mp4';
-downloadFile(VIDEO_URL, 'downloads');
+app.get("/download", async (req, res) => {
+	const v_id = req.query.url.split('v=')[1];
+    const info = await ytdl.getInfo(req.query.url);
+	return res.render("download", {
+		url: "https://www.youtube.com/embed/" + v_id,
+        info: info.formats.sort((a, b) => {
+            return a.mimeType < b.mimeType;
+        }),
+	});
+});
 
 //running server
 const port=process.env.PORT|| 3000;
